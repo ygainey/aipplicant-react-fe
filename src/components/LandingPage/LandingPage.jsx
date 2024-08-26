@@ -10,20 +10,21 @@ const LandingPage = ({ onAuthentication }) => {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
 
   const handleSignIn = (user) => {
+    console.log('User signed in:', user);  // Add this line
     if (user) {
-      onAuthentication(user);  // This calls the function from App.jsx
+      onAuthentication(user);
       setIsSignInOpen(false);
     }
   };
 
   const handleSignUp = (response) => {
+    console.log('Sign-up response:', response);  // Add this line
     if (response && response.token) {
       const user = JSON.parse(atob(response.token.split('.')[1]));
-      onAuthentication(user);  // This calls the function from App.jsx
+      onAuthentication(user);
       setIsSignUpOpen(false);
     } else {
       console.error('Sign up successful but no token received');
-      // You might want to handle this case, perhaps by showing an error message
     }
   };
 

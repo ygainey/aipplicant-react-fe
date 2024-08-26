@@ -1,31 +1,36 @@
 import { useState } from 'react'
-import { signUp } from '../../services/authService'
+//import { useNavigate } from 'react-router-dom'
+import * as authService from '../../services/authService'
 
-const SignUpForm = ({ onSignUp }) => {
+const SignUpForm = ({ setUser, setIsSignUpOpen }) => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
     password_conf: ''
-  });
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  })
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  //const nav = useNavigate()
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value })
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
     try {
-      const response = await signUp(formData);
-      onSignUp(response);
+      const user = await authService.signUp(formData)
+      setUser(user)
+      setIsSignUpOpen(false)
     } catch (error) {
-      setError(error.message || 'An error occurred during sign up.');
+      setError(error.message || 'An error occurred during sign up.')
     } finally {
       setIsLoading(false);
+      //nav('/')
     }
   };
 
@@ -97,4 +102,4 @@ const SignUpForm = ({ onSignUp }) => {
   );
 };
 
-export default SignUpForm;
+export default SignUpForm
