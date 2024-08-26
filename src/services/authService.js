@@ -15,11 +15,15 @@ const signUp = async (formData) =>{
             body: JSON.stringify(formData)
         })
         const resBody = await res.json()
+        
         if (resBody.error){throw new Error(resBody.error)}
         localStorage.setItem('token', resBody.token)
         return resBody
     } catch (error) {
-        throw new Error({error: error.message })
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error(error.message || 'An unexpected error occurred. Please try again.')
     }
 }
 
@@ -30,15 +34,23 @@ const signIn = async (user) =>{
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(user)
         })
+
         const resBody = await res.json()
+
         if (resBody.error){throw new Error(resBody.error)}
+        
         if (resBody.token){
             localStorage.setItem('token', resBody.token)
             const user = JSON.parse(atob(resBody.token.split('.')[1]))
             return user
+        }else{
+            throw new Error('No token received from the server. Please try again.')
         }
     } catch (error) {
-        throw new Error({ error: error.message })
+        if (error instanceof Error) {
+            throw error
+        }
+        throw new Error(error.message || 'An unexpected error occurred. Please try again.')
     }
 }
 
