@@ -43,35 +43,35 @@ const signIn = async (user) =>{
 }
 
 const getUser = () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token')
     if (!token) return null;
 
     try {
-        const parts = token.split('.');
-        if (parts.length !== 3) throw new Error('Invalid token format'); 
+        const parts = token.split('.')
+        if (parts.length !== 3) throw new Error('Invalid token format')
 
         const base64Url = parts[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
         
         // Add padding if necessary
-        const base64Padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
+        const base64Padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=')
 
         const decodedPayload = decodeURIComponent(
             atob(base64Padded)
                 .split('')
                 .map((c) => {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
                 })
                 .join('')
         );
 
-        const user = JSON.parse(decodedPayload);
+        const user = JSON.parse(decodedPayload)
         return user;
     } catch (e) {
-        console.error('Invalid token or decoding error:', e.message);
-        return null;
+        console.error('Invalid token or decoding error:', e.message)
+        return null
     }
-};
+}
 
 // const signUp = async (formData) => {
 //     try {

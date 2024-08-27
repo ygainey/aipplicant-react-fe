@@ -31,27 +31,57 @@ function App() {
     }
   }, [user]);
 
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const apps = await crudService.getAllApplications();
+        setApplications(apps);
+      } catch (error) {
+        console.error('Failed to fetch applications:', error);
+      }
+    };
+
+    fetchApplications();
+  }, []);
+
   const fetchApplications = async () => {
     const apps = await crudService.getAllApplications();
     setApplications(apps);
   };
 
   const handleAddApplication = async (applicationData) => {
-    const newApp = await crudService.createApplication(applicationData);
-    setApplications([...applications, newApp]);
+    const createdApplication = await crudService.createApplication(applicationData);
+    setApplications(prevApplications => [...prevApplications, createdApplication]);
+    return createdApplication; 
   };
+
+  const handleUpdateApplication = async (updatedApplication) => {
+    const updated = await crudService.updateApplication(updatedApplication.id, updatedApplication);
+      setApplications(prevApplications => 
+        prevApplications.map(app => 
+          app.id === updated.id ? updated : app
+        )
+      );
+      return updated;
+  }
 
   const handleDeleteApplication = async (id) => {
-    await crudService.deleteApplication(id);
-    setApplications(applications.filter(app => app.id !== id));
-  };
+    await crudService.deleteApplication(id)
+    //setApplications(applications.filter(app => app.id !== id))
+    setApplications(prevApplications => 
+      prevApplications.filter(app => app.id !== id)
+    )
+  }
 
   const handleSignOut = () => {
-    authService.signOut();
-    setUser(null);
-    nav('/');
-  };
+    authService.signOut()
+    setUser(null)
+    nav('/')
+  }
 
+  const addApplication = (newApplication) => {
+    setApplications(prevApplications => [...prevApplications, newApplication]);
+  };
   // const filteredApplications = applications.filter(app =>
   //   filter === 'All' || app.status.toLowerCase() === filter.toLowerCase()
   // );
@@ -69,7 +99,10 @@ function App() {
             <Board
               // applications={filteredApplications}
               onAddApplication={handleAddApplication}
+              onUpdateApplication={handleUpdateApplication}
               onDeleteApplication={handleDeleteApplication}
+              applications={applications}
+              addApplication={addApplication}
             />
           </div>
         ) : (

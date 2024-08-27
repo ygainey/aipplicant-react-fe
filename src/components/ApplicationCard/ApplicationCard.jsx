@@ -1,9 +1,27 @@
-import { X } from 'lucide-react';
+import { useState } from 'react';
+import { Trash2, Edit } from 'lucide-react';
+import ApplicationView from '../ApplicationView/ApplicationView'
+import PopoutForm from '../PopoutForm/PopoutForm'
+import ApplicationForm from '../ApplicationForm/ApplicationForm';
 
-const ApplicationCard = ({ application, onDelete }) => {
-    return (
+const ApplicationCard = ({ application, onDelete, onUpdate }) => {
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  const handleEdit = (updatedApplication) => {
+    onUpdate(updatedApplication);
+    setIsEditOpen(false);
+  };
+
+  return (
+    <>
       <div className="bg-gray-800 p-4 rounded-lg">
-        <h3 className="text-white font-bold">{application.position}</h3>
+        <h3
+          className="text-white font-bold cursor-pointer hover:text-blue-400"
+          onClick={() => setIsViewOpen(true)}
+        >
+          {application.job_title}
+        </h3>
         <p className="text-gray-400">{application.company}</p>
         <div className="flex justify-between items-center mt-4">
           <span className="text-gray-400">{new Date(application.application_date).toLocaleDateString()}</span>
@@ -15,13 +33,37 @@ const ApplicationCard = ({ application, onDelete }) => {
             {application.status}
           </span>
         </div>
-        <div className="flex justify-end mt-2">
-          <button onClick={() => onDelete(application.id)} className="text-gray-400 hover:text-white">
-            <X size={16} />
+        <div className="flex justify-end mt-2 space-x-2">
+          <button onClick={() => setIsEditOpen(true)} className="text-gray-400 hover:text-white">
+            <Edit size={16} />
+          </button>
+          <button onClick={onDelete} className="text-gray-400 hover:text-white">
+            <Trash2 size={16} />
           </button>
         </div>
       </div>
-    );
-  };
 
-export default ApplicationCard
+      <PopoutForm 
+        isOpen={isViewOpen} 
+        onClose={() => setIsViewOpen(false)} 
+        title={`View Application: ${application.job_title}`}
+      >
+        <ApplicationView application={application} />
+      </PopoutForm>
+
+      <PopoutForm 
+        isOpen={isEditOpen} 
+        onClose={() => setIsEditOpen(false)} 
+        title={`Edit Application: ${application.job_title}`}
+      >
+        <ApplicationForm 
+          initialData={application} 
+          onSubmit={handleEdit} 
+          onCancel={() => setIsEditOpen(false)}
+        />
+      </PopoutForm>
+    </>
+  );
+};
+
+export default ApplicationCard;

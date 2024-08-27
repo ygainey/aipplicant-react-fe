@@ -40,7 +40,7 @@ const createApplication = async (appForm) =>{ //done
     try {
         const res = await fetch(`${BACKEND_URL}application/`,{
             method: 'POST',
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`},
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json'},
             body: JSON.stringify(appForm)
         })
         return res.json()
@@ -64,7 +64,7 @@ const updateApplication = async (appID, appForm) =>{ //done
     try {
         const res = await fetch(`${BACKEND_URL}application/${appID}/`, {
             method: 'PUT',
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`},
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json'},
             body: JSON.stringify(appForm)
         })
         return res.json()
@@ -79,7 +79,8 @@ const deleteApplication = async (appID) =>{ //done
             method: 'DELETE',
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}
         })
-        return res.json()
+        const text = await res.text();
+        return text ? JSON.parse(text) : {};
     } catch (error) {
         console.log(error)
     }
