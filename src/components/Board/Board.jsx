@@ -1,13 +1,29 @@
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ApplicationCard from '../ApplicationCard/ApplicationCard';
 import PopoutForm from '../PopoutForm/PopoutForm'
 import ApplicationForm from '../ApplicationForm/ApplicationForm';
 import * as crudService from '../../services/crudService'
 
+
 const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpdateApplication }) => {
     const [isAddFormOpen, setIsAddFormOpen] = useState(false)
-    const [error, setError] = useState(null)
+    const [error, setError] = useState(null);
+    const [userProfile, setUserProfile] = useState(null);
+
+    useEffect(() => {
+        fetchUserProfile();
+    }, []);
+
+    const fetchUserProfile = async () => {
+        try {
+            const profile = await crudService.getProfile();
+            setUserProfile(profile);
+        } catch (error) {
+            console.error('Failed to fetch user profile:', error);
+            setError('Failed to load user profile. Some features may be limited.');
+        }
+    };
 
     const handleAddApplication = async (newApplication) => {
         try {
@@ -18,26 +34,43 @@ const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpd
             console.error('Failed to add application:', error)
             setError('Failed to add application. Please try again.')
         }
+    }
+
+    const handleGenerateCoverLetter = async (application) => {
+        try {
+            const data = {
+                job_title: application.job_title,
+                company: application.company,
+                jd_url: application.jd_url,
+                professional_bio: userProfile.professional_summary
+            };
+            const generatedLetter = await crudService.generateCoverLetter(data);
+            return generatedLetter;
+        } catch (error) {
+            console.error('Failed to generate cover letter:', error);
+            setError('Failed to generate cover letter. Please try again.');
+            throw error;
+        }
     };
 
-    const handleDeleteApplication = async (applicationId) => {
-        try {
-            await onDeleteApplication(applicationId)
-        } catch (error) {
-            console.error('Failed to delete application:', error)
-            setError('Failed to delete application. Please try again.')
-        }
-    }
+    // const handleDeleteApplication = async (applicationId) => {
+    //     try {
+    //         await onDeleteApplication(applicationId)
+    //     } catch (error) {
+    //         console.error('Failed to delete application:', error)
+    //         setError('Failed to delete application. Please try again.')
+    //     }
+    // }
 
     const handleUpdateApplication = async (updatedApplication) => {
         try {
-            await onUpdateApplication(updatedApplication);
-            setError(null);
+            await onUpdateApplication(updatedApplication)
+            setError(null)
         } catch (error) {
-            console.error('Failed to update application:', error);
-            setError('Failed to update application. Please try again.');
+            console.error('Failed to update application:', error)
+            setError('Failed to update application. Please try again.')
         }
-    };
+    }
 
     return (
         <main className="flex-1 p-8 overflow-auto">
@@ -51,6 +84,8 @@ const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpd
                             application={app}
                             onDelete={() => onDeleteApplication(app.id)}
                             onUpdate={handleUpdateApplication}
+                            onGenerateCoverLetter={() => handleGenerateCoverLetter(app)}
+                            userProfile={userProfile}
                         />
                     ))
                 ) : (
@@ -67,7 +102,7 @@ const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpd
                 <ApplicationForm onSubmit={handleAddApplication} onCancel={() => setIsAddFormOpen(false)} />
             </PopoutForm>
         </main>
-    );
-};
+    )
+}
 
 export default Board;

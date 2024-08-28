@@ -2,7 +2,7 @@ import { useState, createContext, useEffect } from 'react'
 import './App.css'
 import * as authService from './services/authService'
 import * as crudService from './services/crudService'
-import LandingPage from './components/LandingPage/LandingPage'
+//import LandingPage from './components/LandingPage/LandingPage'
 //import AppPage from './components/AppPage/AppPage'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import PopoutForm from './components/PopoutForm/PopoutForm'
@@ -18,41 +18,41 @@ export const AuthedUserContext = createContext(null)
 function App() {
   const [user, setUser] = useState(authService.getUser())
   //const [user, setUser] = useState(null)
-  const [isSignInOpen, setIsSignInOpen] = useState(false);
-  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
-  const [applications, setApplications] = useState([]);
-  const [filter, setFilter] = useState('All');
+  const [isSignInOpen, setIsSignInOpen] = useState(false)
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false)
+  const [applications, setApplications] = useState([])
+  const [filter, setFilter] = useState('All')
 
-  const nav = useNavigate();
+  const nav = useNavigate()
 
   useEffect(() => {
     if (user) {
-      fetchApplications();
+      fetchApplications()
     }
-  }, [user]);
+  }, [user])
 
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const apps = await crudService.getAllApplications();
+        const apps = await crudService.getAllApplications()
         setApplications(apps);
       } catch (error) {
-        console.error('Failed to fetch applications:', error);
+        console.error('Failed to fetch applications:', error)
       }
     };
 
-    fetchApplications();
-  }, []);
+    fetchApplications()
+  }, [])
 
   const fetchApplications = async () => {
-    const apps = await crudService.getAllApplications();
-    setApplications(apps);
+    const apps = await crudService.getAllApplications()
+    setApplications(apps)
   };
 
   const handleAddApplication = async (applicationData) => {
-    const createdApplication = await crudService.createApplication(applicationData);
-    setApplications(prevApplications => [...prevApplications, createdApplication]);
-    return createdApplication; 
+    const createdApplication = await crudService.createApplication(applicationData)
+    setApplications(prevApplications => [...prevApplications, createdApplication])
+    return createdApplication;
   };
 
   const handleUpdateApplication = async (updatedApplication) => {
@@ -61,8 +61,8 @@ function App() {
         prevApplications.map(app => 
           app.id === updated.id ? updated : app
         )
-      );
-      return updated;
+      )
+      return updated
   }
 
   const handleDeleteApplication = async (id) => {
@@ -106,12 +106,12 @@ function App() {
             />
           </div>
         ) : (
-          <div className="min-h-screen bg-gray-100">
+          <div className="min-h-screen bg-gray-900">
             <NavBar
               onSignInClick={() => setIsSignInOpen(true)}
               onSignUpClick={() => setIsSignUpOpen(true)}
             />
-            <LandingPageBody />
+            <LandingPageBody onSignUpClick={() => setIsSignUpOpen(true)}/>
             <PopoutForm isOpen={isSignInOpen} onClose={() => setIsSignInOpen(false)} title="Sign In">
               <SignInForm setUser={setUser} setIsSignInOpen={setIsSignInOpen} />
             </PopoutForm>

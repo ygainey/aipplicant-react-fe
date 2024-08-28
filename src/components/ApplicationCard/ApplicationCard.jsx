@@ -1,17 +1,31 @@
 import { useState } from 'react';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2, Edit, FileText } from 'lucide-react'
 import ApplicationView from '../ApplicationView/ApplicationView'
 import PopoutForm from '../PopoutForm/PopoutForm'
-import ApplicationForm from '../ApplicationForm/ApplicationForm';
+import ApplicationForm from '../ApplicationForm/ApplicationForm'
+import CoverLetter from '../CoverLetter/CoverLetter'
 
-const ApplicationCard = ({ application, onDelete, onUpdate }) => {
-  const [isViewOpen, setIsViewOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
+const ApplicationCard = ({ application, onDelete, onUpdate, onGenerateCoverLetter, userProfile }) => {
+  const [isViewOpen, setIsViewOpen] = useState(false)
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isCoverLetterOpen, setIsCoverLetterOpen] = useState(false)
+  const [coverLetterContent, setCoverLetterContent] = useState('')
 
   const handleEdit = (updatedApplication) => {
-    onUpdate(updatedApplication);
-    setIsEditOpen(false);
+    onUpdate(updatedApplication)
+    setIsEditOpen(false)
   };
+
+  const handleGenerateCoverLetter = async () => {
+    try {
+      const generatedLetter = await onGenerateCoverLetter(application)
+      setCoverLetterContent(generatedLetter)
+      setIsCoverLetterOpen(true)
+    } catch (error) {
+      console.error('Failed to generate cover letter:', error)
+      // Handle error (e.g., show an error message to the user)
+    }
+  }
 
   return (
     <>
@@ -25,15 +39,22 @@ const ApplicationCard = ({ application, onDelete, onUpdate }) => {
         <p className="text-gray-400">{application.company}</p>
         <div className="flex justify-between items-center mt-4">
           <span className="text-gray-400">{new Date(application.application_date).toLocaleDateString()}</span>
-          <span className={`px-2 py-1 rounded-full text-sm ${
-            application.status === 'applied' ? 'bg-yellow-500' :
-            application.status === 'interviewing' ? 'bg-blue-500' :
-            application.status === 'rejected' ? 'bg-red-500' : 'bg-gray-500'
-          } text-white`}>
+          <span className={
+            `px-2 py-1 rounded-full text-sm ${application.status === 'applied' ? 'bg-yellow-500' :
+              application.status === 'interviewing' ? 'bg-blue-500' :
+                application.status === 'rejected' ? 'bg-red-500' :
+                  application.status === 'offered' ? 'bg-green-300' :
+                    application.status === 'accepted' ? 'bg-green-700' :
+                      'bg-gray-500'
+            } text-white`
+          }>
             {application.status}
           </span>
         </div>
         <div className="flex justify-end mt-2 space-x-2">
+          <button onClick={handleGenerateCoverLetter} className="text-gray-400 hover:text-white">
+            <FileText size={16} />
+          </button>
           <button onClick={() => setIsEditOpen(true)} className="text-gray-400 hover:text-white">
             <Edit size={16} />
           </button>
@@ -43,27 +64,37 @@ const ApplicationCard = ({ application, onDelete, onUpdate }) => {
         </div>
       </div>
 
-      <PopoutForm 
-        isOpen={isViewOpen} 
-        onClose={() => setIsViewOpen(false)} 
+      <PopoutForm
+        isOpen={isViewOpen}
+        onClose={() => setIsViewOpen(false)}
         title={`View Application: ${application.job_title}`}
       >
         <ApplicationView application={application} />
       </PopoutForm>
 
-      <PopoutForm 
-        isOpen={isEditOpen} 
-        onClose={() => setIsEditOpen(false)} 
+      <PopoutForm
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
         title={`Edit Application: ${application.job_title}`}
       >
-        <ApplicationForm 
-          initialData={application} 
-          onSubmit={handleEdit} 
+        <ApplicationForm
+          initialData={application}
+          onSubmit={handleEdit}
           onCancel={() => setIsEditOpen(false)}
         />
       </PopoutForm>
+      <PopoutForm 
+        isOpen={isCoverLetterOpen} 
+        onClose={() => setIsCoverLetterOpen(false)} 
+        title="Generated Cover Letter"
+      >
+        <CoverLetter 
+          coverLetter={coverLetterContent} 
+          onClose={() => setIsCoverLetterOpen(false)} 
+        />
+      </PopoutForm>
     </>
-  );
-};
+  )
+}
 
 export default ApplicationCard;

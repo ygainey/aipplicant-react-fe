@@ -34,7 +34,7 @@ const ApplicationView = ({ application }) => {
         <p className="mt-1 text-sm text-gray-600">{application.notes || 'No notes'}</p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default ApplicationView;

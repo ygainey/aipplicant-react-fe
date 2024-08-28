@@ -1,10 +1,10 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 
-const getProfile = async () =>{ //done
+const getProfile = async () => { //done
     try {
         const res = await fetch(`${BACKEND_URL}profile/`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         })
         return res.json()
     } catch (error) {
@@ -12,11 +12,11 @@ const getProfile = async () =>{ //done
     }
 }
 
-const updateProfile = async (profileForm) =>{ //done
+const updateProfile = async (profileForm) => { //done
     try {
         const res = await fetch(`${BACKEND_URL}profile/`, {
             method: 'PUT',
-            headers: {Authorization : `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json'},
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(profileForm)
         })
         return res.json()
@@ -25,10 +25,10 @@ const updateProfile = async (profileForm) =>{ //done
     }
 }
 
-const getAllApplications = async () =>{ //done
+const getAllApplications = async () => { //done
     try {
         const res = await fetch(`${BACKEND_URL}application/`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         })
         return res.json()
     } catch (error) {
@@ -36,11 +36,11 @@ const getAllApplications = async () =>{ //done
     }
 }
 
-const createApplication = async (appForm) =>{ //done
+const createApplication = async (appForm) => { //done
     try {
-        const res = await fetch(`${BACKEND_URL}application/`,{
+        const res = await fetch(`${BACKEND_URL}application/`, {
             method: 'POST',
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json'},
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(appForm)
         })
         return res.json()
@@ -49,10 +49,10 @@ const createApplication = async (appForm) =>{ //done
     }
 }
 
-const getAnApplication = async (appID) =>{ //done
+const getAnApplication = async (appID) => { //done
     try {
         const res = await fetch(`${BACKEND_URL}application/${appID}/`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         })
         return res.json()
     } catch (error) {
@@ -60,11 +60,11 @@ const getAnApplication = async (appID) =>{ //done
     }
 }
 
-const updateApplication = async (appID, appForm) =>{ //done
+const updateApplication = async (appID, appForm) => { //done
     try {
         const res = await fetch(`${BACKEND_URL}application/${appID}/`, {
             method: 'PUT',
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json'},
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(appForm)
         })
         return res.json()
@@ -73,11 +73,11 @@ const updateApplication = async (appID, appForm) =>{ //done
     }
 }
 
-const deleteApplication = async (appID) =>{ //done
+const deleteApplication = async (appID) => { //done
     try {
         const res = await fetch(`${BACKEND_URL}application/${appID}/`, {
             method: 'DELETE',
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         })
         const text = await res.text();
         return text ? JSON.parse(text) : {};
@@ -86,4 +86,27 @@ const deleteApplication = async (appID) =>{ //done
     }
 }
 
-export {getProfile, updateProfile, getAllApplications, createApplication, getAnApplication, updateApplication, deleteApplication}
+const generateCoverLetter = async (data) => {
+    try {
+        const response = await fetch(`${BACKEND_URL}generate-cover-letter/`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        return result.cover_letter;
+    } catch (error) {
+        console.error('Error generating cover letter:', error);
+        throw error;
+    }
+};
+
+export { getProfile, updateProfile, getAllApplications, createApplication, getAnApplication, updateApplication, deleteApplication, generateCoverLetter }
