@@ -7,7 +7,7 @@ import * as crudService from '../../services/crudService'
 
 
 const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpdateApplication }) => {
-    const [isAddFormOpen, setIsAddFormOpen] = useState(false)
+    const [isAddFormOpen, setIsAddFormOpen] = useState(false);
     const [error, setError] = useState(null);
     const [userProfile, setUserProfile] = useState(null);
 
@@ -27,14 +27,14 @@ const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpd
 
     const handleAddApplication = async (newApplication) => {
         try {
-            await onAddApplication(newApplication)
-            setIsAddFormOpen(false)
-            setError(null)
+            await onAddApplication(newApplication);
+            setIsAddFormOpen(false);
+            setError(null);
         } catch (error) {
-            console.error('Failed to add application:', error)
-            setError('Failed to add application. Please try again.')
+            console.error('Failed to add application:', error);
+            setError('Failed to add application. Please try again.');
         }
-    }
+    };
 
     const handleGenerateCoverLetter = async (application) => {
         try {
@@ -42,7 +42,7 @@ const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpd
                 job_title: application.job_title,
                 company: application.company,
                 jd_url: application.jd_url,
-                professional_bio: userProfile.professional_summary
+                professional_bio: userProfile?.professional_summary || ''
             };
             const generatedLetter = await crudService.generateCoverLetter(data);
             return generatedLetter;
@@ -53,24 +53,15 @@ const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpd
         }
     };
 
-    // const handleDeleteApplication = async (applicationId) => {
-    //     try {
-    //         await onDeleteApplication(applicationId)
-    //     } catch (error) {
-    //         console.error('Failed to delete application:', error)
-    //         setError('Failed to delete application. Please try again.')
-    //     }
-    // }
-
     const handleUpdateApplication = async (updatedApplication) => {
         try {
-            await onUpdateApplication(updatedApplication)
-            setError(null)
+            await onUpdateApplication(updatedApplication);
+            setError(null);
         } catch (error) {
-            console.error('Failed to update application:', error)
-            setError('Failed to update application. Please try again.')
+            console.error('Failed to update application:', error);
+            setError('Failed to update application. Please try again.');
         }
-    }
+    };
 
     return (
         <main className="flex-1 p-8 overflow-auto">
@@ -102,7 +93,7 @@ const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpd
                 <ApplicationForm onSubmit={handleAddApplication} onCancel={() => setIsAddFormOpen(false)} />
             </PopoutForm>
         </main>
-    )
-}
+    );
+};
 
 export default Board;

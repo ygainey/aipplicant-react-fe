@@ -86,23 +86,23 @@ const deleteApplication = async (appID) => { //done
     }
 }
 
-const generateCoverLetter = async (data) => {
+const generateCoverLetter = async (applicationData) => {
     try {
-        const response = await fetch(`${BACKEND_URL}generate-cover-letter/`, {
+        const res = await fetch(`${BACKEND_URL}generate-cover-letter/`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(applicationData)
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
         }
 
-        const result = await response.json();
-        return result.cover_letter;
+        const data = await res.json();
+        return data.cover_letter;
     } catch (error) {
         console.error('Error generating cover letter:', error);
         throw error;
