@@ -17,7 +17,6 @@ const SignInForm = ({ setUser }) => {
     try {
       const user = await authService.signIn(formData)
       setUser(user)
-      console.log(user)
     } catch (error) {
       setError(error.message || 'Invalid credentials. Please try again.')
     } finally {
