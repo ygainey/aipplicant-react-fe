@@ -79,8 +79,8 @@ const deleteApplication = async (appID) => { //done
             method: 'DELETE',
             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         })
-        const text = await res.text();
-        return text ? JSON.parse(text) : {};
+        const text = await res.text()
+        return text ? JSON.parse(text) : {}
     } catch (error) {
         console.log(error)
     }
@@ -95,18 +95,18 @@ const generateCoverLetter = async (applicationData) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(applicationData)
-        });
+        })
 
         if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
+            throw new Error(`HTTP error! status: ${res.status}`)
         }
 
-        const data = await res.json();
-        return data.cover_letter;
+        const data = await res.json()
+        return data.cover_letter
     } catch (error) {
-        console.error('Error generating cover letter:', error);
-        throw error;
+        console.error('Error generating cover letter:', error)
+        throw error
     }
-};
+}
 
 export { getProfile, updateProfile, getAllApplications, createApplication, getAnApplication, updateApplication, deleteApplication, generateCoverLetter }

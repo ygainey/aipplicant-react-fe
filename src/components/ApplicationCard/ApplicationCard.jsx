@@ -1,37 +1,37 @@
-import { useState } from 'react';
+import { useState } from 'react'
 import { Trash2, Edit, FileText } from 'lucide-react'
 import ApplicationView from '../ApplicationView/ApplicationView'
 import PopoutForm from '../PopoutForm/PopoutForm'
 import ApplicationForm from '../ApplicationForm/ApplicationForm'
 import CoverLetter from '../CoverLetter/CoverLetter'
 
-const ApplicationCard = ({ application, onDelete, onUpdate, onGenerateCoverLetter, userProfile }) => {
-  const [isViewOpen, setIsViewOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isCoverLetterOpen, setIsCoverLetterOpen] = useState(false);
-  const [coverLetterContent, setCoverLetterContent] = useState('');
+const ApplicationCard = ({ application, onDelete, onUpdate, onGenerateCoverLetter}) => {
+  const [isViewOpen, setIsViewOpen] = useState(false)
+  const [isEditOpen, setIsEditOpen] = useState(false)
+  const [isCoverLetterOpen, setIsCoverLetterOpen] = useState(false)
+  const [coverLetterContent, setCoverLetterContent] = useState('')
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null)
 
   const handleEdit = (updatedApplication) => {
-      onUpdate(updatedApplication);
-      setIsEditOpen(false);
+      onUpdate(updatedApplication)
+      setIsEditOpen(false)
   };
 
   const handleGenerateCoverLetter = async () => {
-      setIsLoading(true);
-      setError(null);
+      setIsLoading(true)
+      setError(null)
       try {
-          const generatedLetter = await onGenerateCoverLetter(application);
-          setCoverLetterContent(generatedLetter);
-          setIsCoverLetterOpen(true);
+          const generatedLetter = await onGenerateCoverLetter(application)
+          setCoverLetterContent(generatedLetter)
+          setIsCoverLetterOpen(true)
       } catch (error) {
-          console.error('Failed to generate cover letter:', error);
-          setError('Failed to generate cover letter. Please try again.');
+          console.error('Failed to generate cover letter:', error)
+          setError('Failed to generate cover letter. Please try again.')
       } finally {
-          setIsLoading(false);
+          setIsLoading(false)
       }
-  };
+  }
 
   return (
       <>
@@ -102,7 +102,7 @@ const ApplicationCard = ({ application, onDelete, onUpdate, onGenerateCoverLette
               />
           </PopoutForm>
       </>
-  );
-};
+  )
+}
 
 export default ApplicationCard;

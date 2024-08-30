@@ -1,5 +1,4 @@
-import { useState } from 'react';
-//import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import * as authService from '../../services/authService'
 
 const SignInForm = ({ setUser }) => {
@@ -7,27 +6,24 @@ const SignInForm = ({ setUser }) => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  //const nav = useNavigate()
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
     try {
-      const user = await authService.signIn(formData);
-      setUser(user);
+      const user = await authService.signIn(formData)
+      setUser(user)
       console.log(user)
     } catch (error) {
-      setError(error.message || 'Invalid credentials. Please try again.');
+      setError(error.message || 'Invalid credentials. Please try again.')
     } finally {
-      setIsLoading(false);
-      //nav('/')
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -70,7 +66,7 @@ const SignInForm = ({ setUser }) => {
         </button>
       </div>
     </form>
-  );
-};
+  )
+}
 
 export default SignInForm;

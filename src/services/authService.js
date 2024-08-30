@@ -49,13 +49,9 @@ const getUser = () => {
     try {
         const parts = token.split('.')
         if (parts.length !== 3) throw new Error('Invalid token format')
-
         const base64Url = parts[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-        
-        // Add padding if necessary
         const base64Padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=')
-
         const decodedPayload = decodeURIComponent(
             atob(base64Padded)
                 .split('')
@@ -64,7 +60,6 @@ const getUser = () => {
                 })
                 .join('')
         );
-
         const user = JSON.parse(decodedPayload)
         return user;
     } catch (e) {

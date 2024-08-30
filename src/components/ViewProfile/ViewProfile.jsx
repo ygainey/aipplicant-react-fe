@@ -2,26 +2,25 @@ import { useState, useEffect } from 'react'
 import * as crudService from '../../services/crudService'
 
 const ViewProfile = () => {
-  const [profile, setProfile] = useState(null);
-  const [error, setError] = useState(null);
+  const [profile, setProfile] = useState(null)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const data = await crudService.getProfile();
-        setProfile(data);
+        const data = await crudService.getProfile()
+        setProfile(data)
       } catch (error) {
-        console.error('Failed to fetch profile:', error);
-        setError('Failed to load profile. Please try again.');
+        console.error('Failed to fetch profile:', error)
+        setError('Failed to load profile. Please try again.')
       }
-    };
+    }
 
-    fetchProfile();
-  }, []);
+    fetchProfile()
+  }, [])
 
   if (error) return <p className="text-red-500">{error}</p>;
   if (!profile) return <p>Loading profile...</p>;
-
   return (
     <div className="space-y-4">
       <div>
@@ -41,7 +40,7 @@ const ViewProfile = () => {
         <p className="mt-1 text-sm text-gray-600">{profile.professional_summary || 'Not provided'}</p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default ViewProfile;

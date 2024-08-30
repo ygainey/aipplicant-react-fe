@@ -1,5 +1,4 @@
 import { useState } from 'react'
-//import { useNavigate } from 'react-router-dom'
 import * as authService from '../../services/authService'
 
 const SignUpForm = ({ setUser, setIsSignUpOpen }) => {
@@ -12,11 +11,9 @@ const SignUpForm = ({ setUser, setIsSignUpOpen }) => {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  //const nav = useNavigate()
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
-  };
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -30,9 +27,8 @@ const SignUpForm = ({ setUser, setIsSignUpOpen }) => {
       setError(error.message || 'An error occurred during sign up.')
     } finally {
       setIsLoading(false);
-      //nav('/')
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -99,7 +95,7 @@ const SignUpForm = ({ setUser, setIsSignUpOpen }) => {
         </button>
       </div>
     </form>
-  );
-};
+  )
+}
 
 export default SignUpForm

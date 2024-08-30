@@ -1,40 +1,40 @@
-import { Plus } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import ApplicationCard from '../ApplicationCard/ApplicationCard';
+import { Plus } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import ApplicationCard from '../ApplicationCard/ApplicationCard'
 import PopoutForm from '../PopoutForm/PopoutForm'
-import ApplicationForm from '../ApplicationForm/ApplicationForm';
+import ApplicationForm from '../ApplicationForm/ApplicationForm'
 import * as crudService from '../../services/crudService'
 
 
 const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpdateApplication }) => {
-    const [isAddFormOpen, setIsAddFormOpen] = useState(false);
-    const [error, setError] = useState(null);
-    const [userProfile, setUserProfile] = useState(null);
+    const [isAddFormOpen, setIsAddFormOpen] = useState(false)
+    const [error, setError] = useState(null)
+    const [userProfile, setUserProfile] = useState(null)
 
     useEffect(() => {
-        fetchUserProfile();
-    }, []);
+        fetchUserProfile()
+    }, [])
 
     const fetchUserProfile = async () => {
         try {
-            const profile = await crudService.getProfile();
-            setUserProfile(profile);
+            const profile = await crudService.getProfile()
+            setUserProfile(profile)
         } catch (error) {
-            console.error('Failed to fetch user profile:', error);
-            setError('Failed to load user profile. Some features may be limited.');
+            console.error('Failed to fetch user profile:', error)
+            setError('Failed to load user profile. Some features may be limited.')
         }
     };
 
     const handleAddApplication = async (newApplication) => {
         try {
-            await onAddApplication(newApplication);
-            setIsAddFormOpen(false);
-            setError(null);
+            await onAddApplication(newApplication)
+            setIsAddFormOpen(false)
+            setError(null)
         } catch (error) {
-            console.error('Failed to add application:', error);
-            setError('Failed to add application. Please try again.');
+            console.error('Failed to add application:', error)
+            setError('Failed to add application. Please try again.')
         }
-    };
+    }
 
     const handleGenerateCoverLetter = async (application) => {
         try {
@@ -43,25 +43,25 @@ const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpd
                 company: application.company,
                 jd_url: application.jd_url,
                 professional_bio: userProfile?.professional_summary || ''
-            };
-            const generatedLetter = await crudService.generateCoverLetter(data);
-            return generatedLetter;
+            }
+            const generatedLetter = await crudService.generateCoverLetter(data)
+            return generatedLetter
         } catch (error) {
-            console.error('Failed to generate cover letter:', error);
-            setError('Failed to generate cover letter. Please try again.');
-            throw error;
+            console.error('Failed to generate cover letter:', error)
+            setError('Failed to generate cover letter. Please try again.')
+            throw error
         }
     };
 
     const handleUpdateApplication = async (updatedApplication) => {
         try {
-            await onUpdateApplication(updatedApplication);
-            setError(null);
+            await onUpdateApplication(updatedApplication)
+            setError(null)
         } catch (error) {
-            console.error('Failed to update application:', error);
-            setError('Failed to update application. Please try again.');
+            console.error('Failed to update application:', error)
+            setError('Failed to update application. Please try again.')
         }
-    };
+    }
 
     return (
         <main className="flex-1 p-8 overflow-auto">
@@ -93,7 +93,7 @@ const Board = ({ applications = [], onAddApplication, onDeleteApplication, onUpd
                 <ApplicationForm onSubmit={handleAddApplication} onCancel={() => setIsAddFormOpen(false)} />
             </PopoutForm>
         </main>
-    );
-};
+    )
+}
 
-export default Board;
+export default Board
