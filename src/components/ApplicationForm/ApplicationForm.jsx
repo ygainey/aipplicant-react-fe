@@ -52,7 +52,7 @@ const ApplicationForm = ({ initialData, onSubmit, onCancel }) => {
         <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
           <p className="font-bold">Note about login-protected URLs</p>
           <p>It looks like you entered a URL that might be behind a login wall (like LinkedIn or Glassdoor).</p>
-          <p>Please copy the Job Description directly from their careers page as it required to generate a cover letter.</p>
+          <p>Please copy the Job Description URL directly from their careers page as it required to generate a cover letter.</p>
         </div>
       )}
       
