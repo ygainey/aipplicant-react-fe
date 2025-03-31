@@ -10,6 +10,7 @@ const ApplicationForm = ({ initialData, onSubmit, onCancel }) => {
     salary: '',
     notes: ''
   })
+  const [showLoginWarning, setShowLoginWarning] = useState(false)
   const isEditing = !!initialData
 
   useEffect(() => {
@@ -24,6 +25,14 @@ const ApplicationForm = ({ initialData, onSubmit, onCancel }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    // Check if URL is likely from LinkedIn or other login-protected sites
+    if (name === 'jd_url' && value) {
+      const loginProtectedDomains = ['linkedin.com', 'glassdoor.com'];
+      const isLoginProtected = loginProtectedDomains.some(domain => value.includes(domain));
+      setShowLoginWarning(isLoginProtected);
+    }
+    
     setFormData(prevData => ({
       ...prevData,
       [name]: name === 'salary' ? (value === '' ? '' : parseInt(value, 10)) : value
@@ -39,6 +48,14 @@ const ApplicationForm = ({ initialData, onSubmit, onCancel }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {showLoginWarning && (
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
+          <p className="font-bold">Note about login-protected URLs</p>
+          <p>It looks like you entered a URL that might be behind a login wall (like LinkedIn or Glassdoor).</p>
+          <p>Please copy the Job Description directly from their careers page as it required to generate a cover letter.</p>
+        </div>
+      )}
+      
       <div>
         <label htmlFor="job_title" className="block text-sm font-medium text-gray-700">Job Title</label>
         <input
