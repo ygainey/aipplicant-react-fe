@@ -57,13 +57,13 @@ const ApplicationCard = ({ application, onDelete, onUpdate, onGenerateCoverLette
                   </span>
               </div>
               <div className="flex justify-end mt-2 space-x-2">
-                  <button onClick={handleGenerateCoverLetter} className="text-gray-400 hover:text-white" disabled={isLoading}>
+                  <button onClick={handleGenerateCoverLetter} className="text-gray-400 hover:text-white" disabled={isLoading} title="Generate Cover Letter">
                       <FileText size={16} />
                   </button>
-                  <button onClick={() => setIsEditOpen(true)} className="text-gray-400 hover:text-white">
+                  <button onClick={() => setIsEditOpen(true)} className="text-gray-400 hover:text-white" title="Edit Application">
                       <Edit size={16} />
                   </button>
-                  <button onClick={onDelete} className="text-gray-400 hover:text-white">
+                  <button onClick={onDelete} className="text-gray-400 hover:text-white" title="Delete Application">
                       <Trash2 size={16} />
                   </button>
               </div>
